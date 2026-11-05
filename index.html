@@ -54,6 +54,7 @@
 .d3-stage svg.dragging{cursor:grabbing}
 .d3-stage text{font-family:Arial,"PingFang SC","Microsoft YaHei",Thonburi,"Leelawadee UI","Noto Sans Thai",sans-serif;paint-order:stroke;stroke:#fff;stroke-width:3.5px;stroke-linejoin:round}
 .d3-label{cursor:pointer}
+.d3-ideal,.d3-ideal-line,.d3-back,.d3-legend{pointer-events:none}
 .d3-chips{display:flex;flex-wrap:wrap;gap:6px;padding:6px 24px 0}
 .d3-chips button{border:1px solid #dfe7e3;background:#f7faf8;border-radius:16px;padding:7px 11px;font:inherit;font-size:12px;line-height:1.2;color:#36514a;cursor:pointer;min-height:34px}
 .d3-chips button:hover{border-color:#b9d6cb}
@@ -2351,17 +2352,17 @@ function build(p){
  const culetFaces=ofType('culet'),pavLow=[-rc,yCul,0];
  const iV=7*SEG+SEG/2,aV=gA(iV);                      // a valley next to the left profile: girdle measured here
  const GEO={
-  diameter:{segs:[[[-R,yDia,0],[R,yDia,0]],[[-R,yT,0],[-R,yDia+.05,0]],[[R,yT,0],[R,yDia+.05,0]]],ends:[[-R,yDia,0],[R,yDia,0]],anchor:[.45,yDia,0]},
+  diameter:{segs:[[[-R,yDia,0],[R,yDia,0]],[[-R,yT,0],[-R,yDia+.05,0]],[[R,yT,0],[R,yDia+.05,0]]],ends:[[-R,yDia,0],[R,yDia,0]],anchor:[.45,yDia,0],hl:ofType('band')},
   table:{segs:[[[-t,yTbl,0],[t,yTbl,0]],[[-t,yTab,0],[-t,yTbl+.05,0]],[[t,yTab,0],[t,yTbl+.05,0]]],ends:[[-t,yTbl,0],[t,yTbl,0]],anchor:[-.25,yTbl,0],hl:ofType('table')},
-  'crown-angle':{segs:[arc(-R,yT,.3,0,p.crown),[[-R,yT,0],[-R+.45,yT,0]],[[-R,yT,0],[-t,yTab,0]]],anchor:arcPt(-R,yT,.3,p.crown/2)},
-  girdle:{segs:[[pol(R+.1,aV,topY[iV]),pol(R+.1,aV,botY[iV])],[pol(R,aV,topY[iV]),pol(R+.16,aV,topY[iV])],[pol(R,aV,botY[iV]),pol(R+.16,aV,botY[iV])]],anchor:pol(R+.1,aV,(topY[iV]+botY[iV])/2)},
-  'pavilion-angle':{segs:[arc(-R,yB,.3,0,-p.pav),[[-R,yB,0],[-R+.45,yB,0]],[[-R,yB,0],pavLow]],anchor:arcPt(-R,yB,.3,-p.pav/2)},
+  'crown-angle':{segs:[arc(-R,yT,.3,0,p.crown),[[-R,yT,0],[-R+.45,yT,0]],[[-R,yT,0],[-t,yTab,0]]],anchor:arcPt(-R,yT,.3,p.crown/2),hl:ofType('bezel')},
+  girdle:{segs:[[pol(R+.1,aV,topY[iV]),pol(R+.1,aV,botY[iV])],[pol(R,aV,topY[iV]),pol(R+.16,aV,topY[iV])],[pol(R,aV,botY[iV]),pol(R+.16,aV,botY[iV])]],anchor:pol(R+.1,aV,(topY[iV]+botY[iV])/2),hl:ofType('band')},
+  'pavilion-angle':{segs:[arc(-R,yB,.3,0,-p.pav),[[-R,yB,0],[-R+.45,yB,0]],[[-R,yB,0],pavLow]],anchor:arcPt(-R,yB,.3,-p.pav/2),hl:ofType('pavmain')},
   culet:{segs:[],ends:[C],anchor:C,vis:ofType('pavmain','culet'),hl:culetFaces},
-  star:{segs:[closed(starF),[starE,starS]],ends:[starE,starS],anchor:mid(starE,starS),vis:[starF],hl:[starF]},
-  'crown-height':{segs:[[[X1,yT,0],[X1,yTab,0]],[[R,yT,0],[X1+.06,yT,0]],[[t,yTab,0],[X2+.06,yTab,0]]],ends:[[X1,yT,0],[X1,yTab,0]],anchor:[X1,(yT+yTab)/2,0]},
+  star:{segs:[closed(starF),[starE,starS]],ends:[starE,starS],anchor:mid(starE,starS),vis:[starF],hl:ofType('star'),strong:[starF]},
+  'crown-height':{segs:[[[X1,yT,0],[X1,yTab,0]],[[R,yT,0],[X1+.06,yT,0]],[[t,yTab,0],[X2+.06,yTab,0]]],ends:[[X1,yT,0],[X1,yTab,0]],anchor:[X1,(yT+yTab)/2,0],soft:ofType('table','star','bezel','upper')},
   depth:{segs:[[[X2,yTab,0],[X2,yCul,0]],[[t,yTab,0],[X2+.06,yTab,0]],[[0,yCul,0],[X2+.06,yCul,0]]],ends:[[X2,yTab,0],[X2,yCul,0]],anchor:[X2,(yTab+yCul)/2,0]},
-  'pavilion-depth':{segs:[[[X1,yB,0],[X1,yCul,0]],[[R,yB,0],[X1+.06,yB,0]],[[0,yCul,0],[X1+.06,yCul,0]]],ends:[[X1,yB,0],[X1,yCul,0]],anchor:[X1,(yB+yCul)/2,0]},
-  'lower-half':{segs:[closed(lowA),closed(lowB),[lowQ,lowL]],ends:[lowQ,lowL],anchor:mid(lowQ,lowL),vis:[lowA],hl:[lowA,lowB]}
+  'pavilion-depth':{segs:[[[X1,yB,0],[X1,yCul,0]],[[R,yB,0],[X1+.06,yB,0]],[[0,yCul,0],[X1+.06,yCul,0]]],ends:[[X1,yB,0],[X1,yCul,0]],anchor:[X1,(yB+yCul)/2,0],soft:ofType('pavmain','lower','culet')},
+  'lower-half':{segs:[closed(lowA),closed(lowB),[lowQ,lowL]],ends:[lowQ,lowL],anchor:mid(lowQ,lowL),vis:[lowA],hl:ofType('lower'),strong:[lowA,lowB]}
  };
  const PARTS={
   table:{faces:ofType('table'),anchor:[0,yTab,0],vis:[face('table',0)]},
@@ -2497,6 +2498,10 @@ let shape=shapeFrom(null),cur={...STD},model=ideal,morph=null;
 const sideMem={};
 const items=()=>ITEMS[mode];
 const narrow=()=>W<760;
+/* Hovering the stone itself: each facet type maps to a name in the current label set. */
+const SURF={parts:{table:'table',star:'star',bezel:'bezel',upper:'upper',pavmain:'pavmain',lower:'lower',culet:'culet',band:'girdle'},
+ measure:{table:'table',star:'star',bezel:'crown-angle',upper:'crown-height',band:'girdle',pavmain:'pavilion-angle',lower:'lower-half',culet:'culet'}};
+let hoverFace=-1;
 const selected=new Set();                             // chosen names; empty = show everything
 const showKeys=()=>selected.size?selected:new Set(items().map(x=>x[0]));
 const hlKeys=()=>{const s=new Set(selected);if(hover)s.add(hover);return s;};
@@ -2530,8 +2535,11 @@ function render(){
  const path=pts=>pts.map((p,i)=>{const q=P(p);return (i?'L':'M')+f2(q[0])+' '+f2(q[1]);}).join('');
  const front=model.faces.map(f=>rotV(f.n)[2]>1e-6);
  const visible=list=>!list||!list.length?true:list.some(f=>front[f.i]);
- const vis=showKeys(),hk=hlKeys();
- const hl=new Set([...hk].flatMap(k=>(mode==='parts'?model.PARTS[k]&&model.PARTS[k].faces:model.GEO[k]&&model.GEO[k].hl)||[]));
+ const vis=new Set(showKeys()),hk=hlKeys();if(hover)vis.add(hover);  // a hovered name shows even when filtered out
+ /* Highlight levels: strong = measured / hovered facet, hl = every facet of that kind, soft = the region of a height measurement. */
+ const pick=prop=>new Set([...hk].flatMap(k=>(mode==='parts'?prop==='hl'&&model.PARTS[k]&&model.PARTS[k].faces:model.GEO[k]&&model.GEO[k][prop])||[]));
+ const hl=pick('hl'),strong=pick('strong'),soft=pick('soft');
+ if(hover&&model.faces[hoverFace])strong.add(model.faces[hoverFace]);
  /* Ideal reference behind the user's diamond. */
  let ig='',il='';
  if(compare){
@@ -2543,19 +2551,20 @@ function render(){
  let back='',fr='';
  const op=compare?.62:.86;
  for(const f of model.faces){
-  const d=path(f.pts)+'Z',on=hl.has(f);
+  const d=path(f.pts)+'Z',st=strong.has(f),on=st||hl.has(f),sf=!on&&soft.has(f);
   if(!front[f.i]){if(f.type!=='band'&&(!compare||on))back+=`<path d="${d}" fill="none" stroke="${on?'#197e6f':'#5d727a'}" stroke-opacity="${on?.6:.22}" stroke-width="${on?1.2:.7}"/>`;continue;}
   const n=rotV(f.n),df=Math.max(0,n[0]*LD[0]+n[1]*LD[1]+n[2]*LD[2]),sp=Math.pow(Math.max(0,n[0]*HD[0]+n[1]*HD[1]+n[2]*HD[2]),28);
   const band=f.type==='band';
-  const fill=on?`hsl(166,46%,${Math.min(80,40+26*df+18*sp).toFixed(0)}%)`:band?`hsl(200,12%,${Math.min(93,74+16*df).toFixed(0)}%)`:`hsl(198,22%,${Math.min(97,62+24*df+16*sp).toFixed(0)}%)`;
-  fr+=band?`<path d="${d}" fill="${fill}" stroke="${fill}" stroke-width=".8" stroke-linejoin="round"/>`
-   :`<path d="${d}" fill="${fill}" fill-opacity="${on?.92:op}" stroke="#30444b" stroke-width=".9" stroke-linejoin="round"/>`;
+  const fill=st?`hsl(166,58%,${Math.min(62,30+22*df+14*sp).toFixed(0)}%)`:on?`hsl(166,46%,${Math.min(80,40+26*df+18*sp).toFixed(0)}%)`:sf?`hsl(166,28%,${Math.min(92,72+18*df+8*sp).toFixed(0)}%)`:band?`hsl(200,12%,${Math.min(93,74+16*df).toFixed(0)}%)`:`hsl(198,22%,${Math.min(97,62+24*df+16*sp).toFixed(0)}%)`;
+  const hit=` data-d3-key="${SURF[mode][f.type]}" data-d3-face="${f.i}"`;
+  fr+=band?`<path d="${d}" fill="${fill}" stroke="${fill}" stroke-width=".8" stroke-linejoin="round"${hit}/>`
+   :`<path d="${d}" fill="${fill}" fill-opacity="${on?.92:op}" stroke="#30444b" stroke-width=".9" stroke-linejoin="round"${hit}/>`;
  }
  /* Girdle top and bottom edges: draw the visible stretches so the scallops read clearly. */
  const bandFront=model.faces.filter(f=>f.type==='band').map(f=>front[f.i]);
  for(const edge of [model.edgeTop,model.edgeBot]){
   let d='';for(let i=0;i<NG;i++){if(!bandFront[i])continue;const a=P(edge[i]),b=P(edge[(i+1)%NG]);d+=`M${f2(a[0])} ${f2(a[1])}L${f2(b[0])} ${f2(b[1])}`;}
-  if(d)fr+=`<path d="${d}" fill="none" stroke="#30444b" stroke-width="1.2" stroke-linecap="round"/>`;
+  if(d)fr+=`<path d="${d}" fill="none" stroke="#30444b" stroke-width="1.2" stroke-linecap="round" pointer-events="none"/>`;
  }
  gBack.innerHTML=back;gFront.innerHTML=fr;
  let over='';
@@ -2564,10 +2573,10 @@ function render(){
    if(!vis.has(k))continue;
    const g=model.GEO[k],on=hk.has(k),dash=visible(g.vis)?'':' stroke-dasharray="4 3"';
    const col=on?'#197e6f':'#8a9d96',w=on?2.2:1,o=on||!hk.size?1:.55;
-   for(const seg of g.segs)over+=`<path d="${path(seg)}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" opacity="${o}"${dash}/>`;
-   for(const e of g.ends||[]){const q=P(e);over+=`<circle cx="${f2(q[0])}" cy="${f2(q[1])}" r="${on?3:2.2}" fill="${col}" opacity="${o}"/>`;}
+   for(const seg of g.segs){const d=path(seg);over+=`<path d="${d}" fill="none" stroke="transparent" stroke-width="12" stroke-linecap="round" data-d3-key="${k}"/><path d="${d}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round" opacity="${o}"${dash} pointer-events="none"/>`;}
+   for(const e of g.ends||[]){const q=P(e);over+=`<circle cx="${f2(q[0])}" cy="${f2(q[1])}" r="${on?3:2.2}" fill="${col}" opacity="${o}" data-d3-key="${k}"/>`;}
   }
- }else{const q=P(model.C),on=hk.has('culet');over+=`<circle cx="${f2(q[0])}" cy="${f2(q[1])}" r="${on?4:2.5}" fill="${on?'#197e6f':'#30444b'}"/>`;}
+ }else{const q=P(model.C),on=hk.has('culet');over+=`<circle cx="${f2(q[0])}" cy="${f2(q[1])}" r="${on?4:2.5}" fill="${on?'#197e6f':'#30444b'}" data-d3-key="culet"/>`;}
  gOver.innerHTML=over;
  /* Legend (comparison only). */
  let leg='';
@@ -2719,8 +2728,8 @@ svg.addEventListener('pointermove',e=>{
   return;
  }
  if(e.pointerType!=='mouse')return;
- const lab=e.target.closest('.d3-label'),k=lab?lab.dataset.d3Key:null;
- if(k!==hover){hover=k;refresh();}
+ const t=e.target.closest('[data-d3-key]'),k=t?t.dataset.d3Key:null,fi=t&&t.dataset.d3Face!=null?+t.dataset.d3Face:-1;
+ if(k!==hover){hover=k;hoverFace=fi;refresh();}else if(fi!==hoverFace){hoverFace=fi;render();}
 });
 const endDrag=e=>{
  if(!drag||drag.id!==e.pointerId)return;
@@ -2728,12 +2737,12 @@ const endDrag=e=>{
  if(!d.moved&&d.key&&e.type==='pointerup')toggle(d.key);
 };
 svg.addEventListener('pointerup',endDrag);svg.addEventListener('pointercancel',endDrag);
-svg.addEventListener('pointerleave',()=>{if(hover&&!drag){hover=null;refresh();}});
+svg.addEventListener('pointerleave',()=>{if(hover&&!drag){hover=null;hoverFace=-1;refresh();}});
 svg.addEventListener('keydown',e=>{
  const m={ArrowLeft:[-6,0],ArrowRight:[6,0],ArrowUp:[0,-6],ArrowDown:[0,6]}[e.key];
  if(!m)return;e.preventDefault();anim=null;setAuto(false);view.yaw+=m[0];view.pitch=clampP(view.pitch+m[1]);kick();
 });
-$('#d3-mode').addEventListener('click',e=>{const b=e.target.closest('[data-d3-mode]');if(!b||b.dataset.d3Mode===mode)return;mode=b.dataset.d3Mode;selected.clear();hover=null;texts();render();});
+$('#d3-mode').addEventListener('click',e=>{const b=e.target.closest('[data-d3-mode]');if(!b||b.dataset.d3Mode===mode)return;mode=b.dataset.d3Mode;selected.clear();hover=null;hoverFace=-1;texts();render();});
 cmpBtn.addEventListener('click',()=>{compare=!compare;cmpBtn.setAttribute('aria-pressed',String(compare));table();render();});
 $('#d3-views').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.hasAttribute('data-d3-auto')){anim=null;setAuto(!auto);return;}goTo(VIEWS[b.dataset.d3View]);});
 $('#d3-chips').addEventListener('click',e=>{const b=e.target.closest('[data-d3-key]');if(b)toggle(b.dataset.d3Key);});
